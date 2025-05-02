@@ -22,12 +22,7 @@ impl Blocktree {
         let mut storage = InMemoryStorage::new();
         let genesis = Block::new(
             0,
-            vec![Transaction::new(
-                "genesis".to_string(),
-                "genesis".to_string(),
-                0,
-            )
-            .unwrap()],
+            vec![Transaction::new("genesis".to_string(), "genesis".to_string(), 0).unwrap()],
             "0".to_string(),
             "root".to_string(),
         )
@@ -54,9 +49,9 @@ impl Blocktree {
             .storage
             .get_branch(branch_id)
             .ok_or_else(|| BlocktreeError::BranchNotFound(branch_id.to_string()))?;
-        let last_block = branch.last().ok_or_else(|| {
-            BlocktreeError::BranchNotFound("Empty branch".to_string())
-        })?;
+        let last_block = branch
+            .last()
+            .ok_or_else(|| BlocktreeError::BranchNotFound("Empty branch".to_string()))?;
         let new_block = Block::new(
             last_block.index + 1,
             transactions,
@@ -64,7 +59,8 @@ impl Blocktree {
             branch_id.to_string(),
         )?;
         let mined_block = self.consensus.mine_block(new_block)?;
-        self.tree.add_block(mined_block.clone(), branch_id, &mut self.storage)?;
+        self.tree
+            .add_block(mined_block.clone(), branch_id, &mut self.storage)?;
         self.network.broadcast_block(mined_block)?;
         self.coin.mine_reward();
         if self.storage.get_branch(branch_id).unwrap().len() >= self.tree.split_interval {
@@ -83,10 +79,6 @@ impl Blocktree {
     }
 
     pub fn get_branches(&self) -> Vec<String> {
-        self.storage
-            .branches
-            .keys()
-            .cloned()
-            .collect()
+        self.storage.branches.keys().cloned().collect()
     }
 }

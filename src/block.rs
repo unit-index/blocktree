@@ -44,10 +44,7 @@ impl Block {
         if transactions.is_empty() {
             return Ok("0".to_string());
         }
-        let leaves: Vec<String> = transactions
-            .iter()
-            .map(|tx| tx.tx_id.clone())
-            .collect();
+        let leaves: Vec<String> = transactions.iter().map(|tx| tx.tx_id.clone()).collect();
         let merkle_tree = MerkleTree::new(&leaves)
             .map_err(|e| BlocktreeError::SerializationError(e.to_string()))?;
         Ok(merkle_tree.root())

@@ -29,9 +29,7 @@ pub struct BlocktreeCore {
 
 impl BlocktreeCore {
     pub fn new() -> Self {
-        BlocktreeCore {
-            split_interval: 5,
-        }
+        BlocktreeCore { split_interval: 5 }
     }
 }
 
@@ -55,9 +53,10 @@ impl Tree for BlocktreeCore {
         let branch = storage
             .get_branch(branch_id)
             .ok_or_else(|| BlocktreeError::BranchNotFound(branch_id.to_string()))?;
-        let last_block = branch.last().cloned().ok_or_else(|| {
-            BlocktreeError::BranchNotFound("Empty branch".to_string())
-        })?;
+        let last_block = branch
+            .last()
+            .cloned()
+            .ok_or_else(|| BlocktreeError::BranchNotFound("Empty branch".to_string()))?;
         let fiedler_vector = clustering.compute_fiedler_vector()?;
         let (_cluster1, _cluster2) = clustering.partition_nodes(&fiedler_vector);
         let new_branch1 = format!("{}.1", branch_id);
@@ -65,7 +64,10 @@ impl Tree for BlocktreeCore {
         storage.save_block(last_block.clone(), &new_branch1)?;
         storage.save_block(last_block, &new_branch2)?;
         // Note: In-memory storage doesn't remove old branch; add cleanup for disk storage
-        println!("Branch {} split into {} and {}", branch_id, new_branch1, new_branch2);
+        println!(
+            "Branch {} split into {} and {}",
+            branch_id, new_branch1, new_branch2
+        );
         Ok(())
     }
 
