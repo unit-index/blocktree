@@ -1,4 +1,5 @@
 pub mod block;
+pub mod blocktree;
 pub mod clustering;
 pub mod coin;
 pub mod consensus;
@@ -7,4 +8,3 @@ pub mod network;
 pub mod storage;
 pub mod transaction;
 pub mod tree;
-pub mod blocktree;
