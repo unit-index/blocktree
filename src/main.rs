@@ -10,12 +10,8 @@ async fn main() {
     // Add blocks to root branch
     for i in 1..=6 {
         println!("\nAdding block {} to root...", i);
-        let tx = Transaction::new(
-            format!("sender{}", i),
-            format!("receiver{}", i),
-            100,
-        )
-        .expect("Failed to create transaction");
+        let tx = Transaction::new(format!("sender{}", i), format!("receiver{}", i), 100)
+            .expect("Failed to create transaction");
         if let Err(e) = blocktree.add_block(vec![tx], "root") {
             println!("Error: {}", e);
         }
