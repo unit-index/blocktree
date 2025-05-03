@@ -14,7 +14,8 @@ nalgebra = "0.32"
 rand = "0.8"
 chrono = "0.4"
 tokio = { version = "1.35", features = ["full"] }
-merkle-tree = "0.2"
+rs_merkle = "1.5"
+hex = "0.4"
 
 [dev-dependencies]
 tempfile = "3.8"

@@ -5,6 +5,7 @@ use std::collections::HashMap;
 pub trait Storage {
     fn save_block(&mut self, block: Block, branch_id: &str) -> Result<(), BlocktreeError>;
     fn get_branch(&self, branch_id: &str) -> Option<&Vec<Block>>;
+    fn get_branch_keys(&self) -> Vec<String>;
 }
 
 pub struct InMemoryStorage {
@@ -30,5 +31,9 @@ impl Storage for InMemoryStorage {
 
     fn get_branch(&self, branch_id: &str) -> Option<&Vec<Block>> {
         self.branches.get(branch_id)
+    }
+
+    fn get_branch_keys(&self) -> Vec<String> {
+        self.branches.keys().cloned().collect()
     }
 }

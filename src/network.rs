@@ -1,6 +1,7 @@
 use crate::block::Block;
 use crate::error::BlocktreeError;
 use tokio::sync::mpsc;
+use rand::Rng;
 
 pub trait Network {
     fn broadcast_block(&self, block: Block) -> Result<(), BlocktreeError>;
@@ -9,13 +10,12 @@ pub trait Network {
 
 pub struct MockNetwork {
     sender: mpsc::Sender<Block>,
-    receiver: mpsc::Receiver<Block>,
 }
 
 impl MockNetwork {
     pub fn new() -> Self {
-        let (sender, receiver) = mpsc::channel(100);
-        MockNetwork { sender, receiver }
+        let (sender, _receiver) = mpsc::channel(100);
+        MockNetwork { sender }
     }
 }
 

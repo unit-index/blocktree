@@ -1,5 +1,5 @@
 use crate::block::Block;
-use crate::clustering::{Clustering, SpectralClustering};
+use crate::clustering::SpectralClustering;
 use crate::coin::Coin;
 use crate::consensus::{Consensus, ProofOfWork};
 use crate::error::BlocktreeError;
@@ -63,7 +63,7 @@ impl Blocktree {
             .add_block(mined_block.clone(), branch_id, &mut self.storage)?;
         self.network.broadcast_block(mined_block)?;
         self.coin.mine_reward();
-        if self.storage.get_branch(branch_id).unwrap().len() >= self.tree.split_interval {
+        if self.storage.get_branch(branch_id).unwrap().len() >= self.tree.get_split_interval() {
             self.tree
                 .split_branch(branch_id, &self.clustering, &mut self.storage)?;
         }
@@ -79,6 +79,6 @@ impl Blocktree {
     }
 
     pub fn get_branches(&self) -> Vec<String> {
-        self.storage.branches.keys().cloned().collect()
+        self.storage.get_branch_keys()
     }
 }

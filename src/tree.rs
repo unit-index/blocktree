@@ -21,10 +21,11 @@ pub trait Tree {
         branch_id: &str,
         storage: &S,
     ) -> Result<bool, BlocktreeError>;
+    fn get_split_interval(&self) -> usize;
 }
 
 pub struct BlocktreeCore {
-    split_interval: usize,
+    pub split_interval: usize,
 }
 
 impl BlocktreeCore {
@@ -91,5 +92,9 @@ impl Tree for BlocktreeCore {
             }
         }
         Ok(true)
+    }
+
+    fn get_split_interval(&self) -> usize {
+        self.split_interval
     }
 }
