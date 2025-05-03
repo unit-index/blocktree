@@ -1,7 +1,7 @@
 use crate::error::BlocktreeError;
 use crate::transaction::Transaction;
 use chrono::Utc;
-use rs_merkle::{MerkleTree, algorithms::Sha256};
+use rs_merkle::{algorithms::Sha256, MerkleTree};
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 

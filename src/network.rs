@@ -1,7 +1,7 @@
 use crate::block::Block;
 use crate::error::BlocktreeError;
-use tokio::sync::mpsc;
 use rand::Rng;
+use tokio::sync::mpsc;
 
 pub trait Network {
     fn broadcast_block(&self, block: Block) -> Result<(), BlocktreeError>;
