@@ -27,3 +27,9 @@ impl Coin {
         self.supply
     }
 }
+
+impl Default for Coin {
+    fn default() -> Self {
+        Self::new()
+    }
+}

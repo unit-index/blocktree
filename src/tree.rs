@@ -34,6 +34,12 @@ impl BlocktreeCore {
     }
 }
 
+impl Default for BlocktreeCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Tree for BlocktreeCore {
     fn add_block<S: Storage>(
         &mut self,

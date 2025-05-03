@@ -19,6 +19,12 @@ impl MockNetwork {
     }
 }
 
+impl Default for MockNetwork {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Network for MockNetwork {
     fn broadcast_block(&self, block: Block) -> Result<(), BlocktreeError> {
         self.sender
