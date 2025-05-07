@@ -1,9 +1,23 @@
 use crate::error::BlocktreeError;
 use crate::transaction::Transaction;
 use chrono::Utc;
-use rs_merkle::{algorithms::Sha256, MerkleTree};
+use rs_merkle::{Hasher, MerkleTree};
 use serde::{Deserialize, Serialize};
-use sha2::Digest;
+use sha3::{Digest, Sha3_256};
+
+// Custom SHA3-256 hasher for rs_merkle
+#[derive(Clone)]
+pub struct Sha3_256Hasher;
+
+impl Hasher for Sha3_256Hasher {
+    type Hash = [u8; 32];
+
+    fn hash(data: &[u8]) -> Self::Hash {
+        let mut hasher = Sha3_256::new();
+        hasher.update(data);
+        hasher.finalize().into()
+    }
+}
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Block {
@@ -47,19 +61,19 @@ impl Block {
         let leaves: Vec<[u8; 32]> = transactions
             .iter()
             .map(|tx| {
-                let mut hasher = sha2::Sha256::new();
+                let mut hasher = Sha3_256::new();
                 hasher.update(&tx.tx_id);
                 hasher.finalize().into()
             })
             .collect();
-        let merkle_tree = MerkleTree::<Sha256>::from_leaves(&leaves);
+        let merkle_tree = MerkleTree::<Sha3_256Hasher>::from_leaves(&leaves);
         Ok(hex::encode(merkle_tree.root().unwrap_or([0; 32])))
     }
 
     pub fn calculate_hash(&self) -> Result<String, BlocktreeError> {
         let block_json = serde_json::to_string(self)
             .map_err(|e| BlocktreeError::SerializationError(e.to_string()))?;
-        let mut hasher = sha2::Sha256::new();
+        let mut hasher = Sha3_256::new();
         hasher.update(block_json);
         Ok(format!("{:x}", hasher.finalize()))
     }

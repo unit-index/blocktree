@@ -1,6 +1,6 @@
 use crate::error::BlocktreeError;
 use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
+use sha3::{Digest, Sha3_256};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Transaction {
@@ -28,7 +28,7 @@ impl Transaction {
     pub fn calculate_hash(&self) -> Result<String, BlocktreeError> {
         let tx_json = serde_json::to_string(&self)
             .map_err(|e| BlocktreeError::SerializationError(e.to_string()))?;
-        let mut hasher = Sha256::new();
+        let mut hasher = Sha3_256::new();
         hasher.update(tx_json);
         Ok(format!("{:x}", hasher.finalize()))
     }
